@@ -946,7 +946,7 @@ def setup_parser() -> argparse.ArgumentParser:
     )
     return parser
 
-
+import requests
 class ProgressInterceptor:
     def __init__(self, train_id):
         self.train_id = train_id

@@ -950,7 +950,7 @@ import requests
 class ProgressInterceptor:
     def __init__(self, train_id):
         self.train_id = train_id
-        self.api_base_url = "https://13df-2405-201-d02a-a86b-69e0-1f60-c792-bb5/api/generations"
+        self.api_base_url = "https://b060-2405-201-d02a-a86b-69e0-1f60-c792-bb5d.ngrok-free.app/api/generations"
 
     def send_training_progress(self, value, max_value):
         print("entered training progress")

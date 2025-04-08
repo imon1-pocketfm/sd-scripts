@@ -761,7 +761,6 @@ def train(args, progress_interceptor = None):
             if accelerator.sync_gradients:
                 progress_bar.update(1)
                 global_step += 1
-                accelerator.print("progress interceptor entered")
                 progress_interceptor.send_training_progress(
                     value=global_step,
                     max_value=args.max_train_steps,
@@ -952,24 +951,26 @@ class ProgressInterceptor:
     def __init__(self, train_id):
         self.train_id = train_id
         self.api_key = os.getenv("API_KEY")
-        self.api_base_url = "https://comicsai.pocketfm.com/api/generations"
+        self.api_base_url =os.getenv("BASE_URL")
 
     def send_training_progress(self, value, max_value):
         if max_value < 100:
             progress = int((value / max_value) * 100)
+            progress = min(90,progress)
             self._post_progress(progress)
             return
 
         progress_step = max_value // 100
         if value % progress_step == 0:
             progress = value // progress_step
+            progress = min(90,progress)
             self._post_progress(progress)
 
     def _post_progress(self, progress):
         url = f"{self.api_base_url}/{self.train_id}/update_training_progress/"
 
         headers = {
-            "Authorization": f"Api-Key {self.api_key}",
+            "authorization": f"{self.api_key}",
             "Content-Type": "application/json",
         }
 

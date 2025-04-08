@@ -947,13 +947,14 @@ def setup_parser() -> argparse.ArgumentParser:
     return parser
 
 import requests
+import os
 class ProgressInterceptor:
     def __init__(self, train_id):
         self.train_id = train_id
-        self.api_base_url = "https://b060-2405-201-d02a-a86b-69e0-1f60-c792-bb5d.ngrok-free.app/api/generations"
+        self.api_key = os.getenv("API_KEY")
+        self.api_base_url = "https://comicsai.pocketfm.com/api/generations"
 
     def send_training_progress(self, value, max_value):
-        print("entered training progress")
         if max_value < 100:
             progress = int((value / max_value) * 100)
             self._post_progress(progress)
@@ -968,20 +969,8 @@ class ProgressInterceptor:
         url = f"{self.api_base_url}/{self.train_id}/update_training_progress/"
 
         headers = {
-            "Accept": "application/json, text/plain, */*",
-            "Accept-Language": "en-GB,en-US;q=0.9,en;q=0.8",
-            "Cache-Control": "no-cache",
-            "Connection": "keep-alive",
+            "Authorization": f"Api-Key {self.api_key}",
             "Content-Type": "application/json",
-            "Origin": "http://localhost:3000",
-            "Pragma": "no-cache",
-            "Referer": "http://localhost:3000/",
-            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
-            "access-token": "311e7d6f-8d78-4a7a-9831-5aa08b3ef06c",
-            "sec-ch-ua": '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
-            "sec-ch-ua-mobile": "?0",
-            "sec-ch-ua-platform": '"macOS"',
-            "uid": "1"
         }
 
         payload = {"progress": progress}
